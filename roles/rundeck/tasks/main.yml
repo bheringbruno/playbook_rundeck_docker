@@ -1,0 +1,82 @@
+---
+- include_vars: vars/main.vault
+
+- name: Rundeck | Volume
+  docker_volume:
+    name: rundeck-volume
+    state: present
+
+- name: Rundeck | Volume Log
+  docker_volume:
+    name: rundeck-log
+    state: present
+
+- name: Rundeck | Diretorio
+  file:
+    path: "/media/docker/{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - rundeck3
+    - ansible
+
+- name: Rundeck | Node
+  copy:
+    src: resource.xml
+    dest: /media/docker/rundeck3/resource.xml
+    mode: 0644
+
+- name: DOCKERFILE | COPIANDO ARQUIVOS
+  copy:
+    src: "files/{{ item }}"
+    dest: "/media/docker/ansible"
+  with_items:
+    - Dockerfile
+    - docker_files
+
+- name: DOCKER | CRIANDO IMAGEM ANSIBLE
+  docker_image:
+     path: /media/docker/ansible
+     name: rundeck-ansible
+     tag: '1'
+     state: present
+
+
+- name: Rundeck | Containers
+  docker_container:
+    name: "rundeck3"
+    hostname: "rundeck-host"
+    detach: yes
+    ports:
+      - "4440:4440"
+    # links:
+    #   - mysql-5.7:mysql
+    network_mode: host
+    volumes:
+      - /media/docker/ansible:/etc/ansible
+      - /etc/localtime:/etc/localtime:ro
+      - rundeck-log:/home/rundeck/var:rw
+      - rundeck-volume:/home/rundeck/server/data
+      # - /media/docker/rundeck3/resource.xml:/home/rundeck/resource.xml:rw
+    restart_policy: unless-stopped
+    env:
+      # RUNDECK_GRAILS_URL: http://rundeck.local
+      DATABASE_DRIVER: com.mysql.jdbc.Driver
+      EXTERNAL_SERVER_URL: http://deploy.ageri.com.br
+      # RUNDECK_PASSWORD: cN30buL8h51I
+      # DATABASE_URL: "jdbc:mysql://mysql/rundeck_db?autoReconnect=true"
+      SMTP_HOST: smtp.sendgrid.net
+      SMTP_PORT: '587'
+      SMTP_USERNAME: "{{ SMTP_USER }}"
+      SMTP_PASSWORD: "{{ SMTP_PASSWORD }}"
+      SMTP_DEFAULT_FROM: rundeck@ubb.org.br
+      NO_LOCAL_MYSQL: "true"
+      RUNDECK_STORAGE_PROVIDER: db
+      RUNDECK_PROJECT_STORAGE_TYPE: db
+      DATABASE_URL: "jdbc:mysql://172.17.0.1/rundeckdb?autoReconnect=true"
+      DATABASE_ADMIN_USER: "{{ DATABASE_ADMIN_USER }}"
+      DATABASE_ADMIN_PASSWORD: "{{ DATABASE_ADMIN_PASSWORD }}"
+      RUNDECK_PASSWORD: "{{ RUNDECK_PASSWORD }}"
+    # image: jordan/rundeck:latest
+    image: rundeck-ansible:1
+    state: started

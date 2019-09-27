@@ -1,0 +1,2 @@
+MYSQL_USER: "{{ vault.mysql_user}}"
+MYSQL_PASS: "{{ vault.mysql_pass }}"

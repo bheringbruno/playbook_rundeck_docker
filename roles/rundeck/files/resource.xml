@@ -1,0 +1,3 @@
+<project>
+  <node name="ansible" tags="ansible" osFamily="unix" username="root" hostname="ansible"/>
+</project>

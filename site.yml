@@ -1,0 +1,7 @@
+- hosts: ageri-rundeck3
+  gather_facts: yes
+  become: yes
+  roles:
+    - dependences
+    - mysql
+    - rundeck

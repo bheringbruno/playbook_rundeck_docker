@@ -1,0 +1,38 @@
+---
+- name: Pre-requisitos Ansible Debian
+  apt:
+    name: ['python-pip',
+           'apt-transport-https',
+           'ca-certificates',
+           'curl',
+           'gnupg-agent',
+           'software-properties-common'
+           ]
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Pre-requisitos Ansible Docker
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+- name: Docker | Adicionar Repositorio
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable"
+    state: present
+  become: yes
+
+- name: Pre-requisitos Ansible Docker
+  apt:
+    name: ['docker-ce',
+           'docker-ce-cli',
+           'containerd.io'
+          ]
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Pre-requisitos Ansible Docker
+  pip:
+    name: docker-py
+    state: present
+  become: yes
