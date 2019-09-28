@@ -1,5 +1,3 @@
-SMTP_PASSWORD: "{{ vault.smtp_password }}"
-SMTP_USER: "{{ vault.smtp_user }}"
-DATABASE_ADMIN_USER: "{{ vault.mysql_user}}"
-DATABASE_ADMIN_PASSWORD: "{{ vault.mysql_pass }}"
-RUNDECK_PASSWORD: "{{ vault.rundeck_pass }}"
+# SMTP_PASSWORD: "{{ vault.smtp_password }}"
+# SMTP_USER: "{{ vault.smtp_user }}"
+RUNDECK_DATABASE_PASSWORD: "{{ vault.rundeck_pass }}"

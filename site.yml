@@ -1,7 +1,7 @@
-- hosts: ageri-rundeck3
+- hosts: aws-ops
   gather_facts: yes
   become: yes
   roles:
-    - dependences
+          #    - dependences
     - mysql
     - rundeck

@@ -2,7 +2,7 @@
 - include_vars: vars/main.vault
 - name: MySQL | Volume
   docker_volume:
-    name: mysql-volume2
+    name: mysql-volume
     state: present
 
 - name: MySQL | Containers
@@ -13,12 +13,12 @@
     restart_policy: unless-stopped
     ports:
       - "3306:3306"
-    network_mode: host
+    # network_mode: host
     volumes:
-      - mysql-volume2:/var/lib/mysql
+      - mysql-volume:/var/lib/mysql
       - /etc/localtime:/etc/localtime:ro
     env:
-      MYSQL_ROOT_PASSWORD: "{{ ROOT_DB_PASS }}"
+      MYSQL_ROOT_PASSWORD: "{{ MYSQL_ROOT_PASS }}"
       MYSQL_DATABASE: rundeckdb
       MYSQL_USER: "{{ MYSQL_USER }}"
       MYSQL_PASSWORD: "{{ MYSQL_PASS }}"
