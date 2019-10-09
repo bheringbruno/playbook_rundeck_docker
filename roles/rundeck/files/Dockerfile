@@ -1,4 +1,4 @@
-FROM rundeck/rundeck:3.0.24
+FROM rundeck/rundeck:3.1.0
 
 USER root
 

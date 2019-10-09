@@ -2,6 +2,6 @@
   gather_facts: yes
   become: yes
   roles:
-          #    - dependences
+    - dependences
     - mysql
     - rundeck

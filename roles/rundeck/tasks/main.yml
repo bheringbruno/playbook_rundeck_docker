@@ -17,32 +17,32 @@
   docker_image:
      path: "/tmp"
      name: runsible
-     tag: 3.0.24
+     tag: 3.1.0
      state: present
      force: yes
 
 - name: DOCKER | CRIANDO O CONTAINER
   docker_container:
     name: "runsible"
-    image: runsible:3.0.24
+    image: runsible:3.1.0
     volumes:
-      - "/home/ops/.ssh:/home/rundeck/.ssh"
-      - "/home/ops/var/logs:/home/rundeck/var/logs"
+      - "/home/admin/.ssh:/home/rundeck/.ssh"
+      - "/media/docker/rundeck/var/logs:/home/rundeck/var/logs"
       - "/etc/ansible:/etc/ansible"
+      - "/media/docker/rundeck/realm.properties:/home/rundeck/server/config/realm.properties"
       - "/etc/localtime:/etc/localtime:ro"
     state: started
     recreate: yes
     restart_policy: unless-stopped
     memory: 1024M
     ports:
-     - "4440:4440"
+     - "80:4440"
     env:
         RUNDECK_STORAGE_CONVERTER_1_CONFIG_PASSWORD: "{{ RUNDECK_DATABASE_PASSWORD }}"
-        RUNDECK_GRAILS_URL: "http://3.229.110.238:4440"
-        RUNDECK_DATABASE_URL: "jdbc:mysql://3.229.110.238/rundeckdb?autoReconnect=true&useSSL=false"
+        RUNDECK_GRAILS_URL: "http://ops.picmo.com.br"
+        RUNDECK_DATABASE_URL: "jdbc:mysql://172.17.0.1/rundeckdb?autoReconnect=true&useSSL=false"
         RUNDECK_DATABASE_DRIVER: "org.mariadb.jdbc.Driver"
         RUNDECK_DATABASE_USERNAME: "rundeck_user"
         RUNDECK_DATABASE_PASSWORD: "{{ RUNDECK_DATABASE_PASSWORD }}"
     etc_hosts:
-      "mysql": "3.229.110.238"
-      "lab-mysql": "172.17.0.1"
+      "mysql": "172.17.0.1"
